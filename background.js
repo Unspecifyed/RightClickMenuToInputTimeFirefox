@@ -45,12 +45,17 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
                     let activeElement = document.activeElement;
                     console.log("Active element:", activeElement);
 
-                    if (activeElement && (activeElement.tagName === 'TEXTAREA' || (activeElement.tagName === 'INPUT' && activeElement.type === 'text'))) {
-                        console.log("Valid input element found. Inserting date and time...");
+                    // Check if the element is an input, textarea, or contenteditable element
+                    if (activeElement && 
+                        (activeElement.tagName === 'TEXTAREA' || 
+                        (activeElement.tagName === 'INPUT' && activeElement.type === 'text') || 
+                        activeElement.getAttribute('contenteditable') === 'true')) {
 
-                        let cursorPos = activeElement.selectionStart;
-                        let textBeforeCursor = activeElement.value.substring(0, cursorPos);
-                        let textAfterCursor = activeElement.value.substring(cursorPos);
+                        console.log("Valid editable element found. Inserting date and time...");
+
+                        let cursorPos = activeElement.selectionStart || 0;
+                        let textBeforeCursor = activeElement.textContent.substring(0, cursorPos);
+                        let textAfterCursor = activeElement.textContent.substring(cursorPos);
                         let dateTime = new Date().toISOString().replace('T', ' ').split('.')[0];  // YYYY-MM-DD HH:MM:SS
 
                         console.log("Current value before cursor:", textBeforeCursor);
@@ -58,14 +63,16 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
                         console.log("Inserting date and time:", dateTime);
 
                         // Insert the date and time at the cursor position
-                        activeElement.value = textBeforeCursor + dateTime + textAfterCursor;
+                        activeElement.textContent = textBeforeCursor + dateTime + textAfterCursor;
 
-                        // Reset the cursor position after inserting the text
-                        activeElement.selectionStart = activeElement.selectionEnd = cursorPos + dateTime.length;
+                        // Reset the cursor position after inserting the text if it's a textarea or input
+                        if (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT') {
+                            activeElement.selectionStart = activeElement.selectionEnd = cursorPos + dateTime.length;
+                        }
 
                         console.log("Date and time inserted successfully.");
                     } else {
-                        console.error("No valid input element is focused or active.");
+                        console.error("No valid input or contenteditable element is focused or active.");
                     }
                 })();
             `
