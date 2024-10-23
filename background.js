@@ -73,20 +73,25 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
                             // Insert the date and time at the current cursor position
                             range.deleteContents();
-                            range.insertNode(document.createTextNode(dateTime));
+                            let textNode = document.createTextNode(dateTime);
+                            range.insertNode(textNode);
 
                             // Move the cursor to the end of the inserted text
-                            range.setStartAfter(range.endContainer);
-                            range.setEndAfter(range.endContainer);
+                            range.setStartAfter(textNode);
+                            range.setEndAfter(textNode);
                             selection.removeAllRanges();
                             selection.addRange(range);
 
-                            console.log("Date and time inserted into contenteditable element. Cursor moved to end of inserted text.");
-                        }
+                            // Focus the active element
+                            activeElement.focus();
 
-                        // Keep the active element focused
-                        activeElement.focus();
-                        console.log("Active element refocused.");
+                            // Ensure the cursor is visible (for elements that may lose focus)
+                            if (activeElement.scrollIntoView) {
+                                activeElement.scrollIntoView({ block: "nearest", inline: "nearest" });
+                            }
+
+                            console.log("Date and time inserted into contenteditable element. Cursor moved to end of inserted text and element refocused.");
+                        }
 
                     } else {
                         console.error("No valid input or contenteditable element is focused or active.");
