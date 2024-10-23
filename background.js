@@ -1,5 +1,5 @@
 // Set the debug flag
-const DEBUG = true;  // Set to false for production
+const DEBUG = false;  // Set to false for production
 
 // A helper function to log messages when debugging is enabled
 function debugLog(...args) {
