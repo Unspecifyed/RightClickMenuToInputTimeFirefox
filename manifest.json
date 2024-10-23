@@ -1,6 +1,8 @@
 {
 	"manifest_version": 2,
 	"name": "Insert Date and Time",
+	"author": "Francis Cottrell-Eshaghi",
+	"homepage_url": "https://github.com/franciscottrell/insert-date-and-time",
 	"version": "1.0",
 	"description": "Inserts the current date and time into text fields with a context menu option.",
 	"permissions": [
@@ -14,5 +16,6 @@
 	},
 	"icons": {
 		"48": "icon.png"
-	}
+	},
+	"license": "GPL-3.0-or-later"
 }
