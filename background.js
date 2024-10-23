@@ -84,6 +84,10 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
                             console.log("Date and time inserted into contenteditable element. Cursor moved to end of inserted text.");
                         }
 
+                        // Keep the active element focused
+                        activeElement.focus();
+                        console.log("Active element refocused.");
+
                     } else {
                         console.error("No valid input or contenteditable element is focused or active.");
                     }
