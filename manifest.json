@@ -1,21 +1,18 @@
 {
-  "manifest_version": 3,
-  "name": "Right Click Menu To Input Date and Time",
-  "version": "1.0",
-  "description": "Inserts the current date and time into text fields with a context menu option.",
-  "permissions": [
-    "contextMenus",
-    "activeTab"
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "icons": {
-    "48": "icon.png"
-  },
-  "action": {
-    "default_icon": {
-      "48": "icon.png"
-    }
-  }
+	"manifest_version": 2,
+	"name": "Insert Date and Time",
+	"version": "1.0",
+	"description": "Inserts the current date and time into text fields with a context menu option.",
+	"permissions": [
+		"contextMenus",
+		"activeTab"
+	],
+	"background": {
+		"scripts": [
+			"background.js"
+		]
+	},
+	"icons": {
+		"48": "icon.png"
+	}
 }
