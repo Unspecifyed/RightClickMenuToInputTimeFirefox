@@ -53,24 +53,37 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
                         console.log("Valid editable element found. Inserting date and time...");
 
-                        let cursorPos = activeElement.selectionStart || 0;
-                        let textBeforeCursor = activeElement.textContent.substring(0, cursorPos);
-                        let textAfterCursor = activeElement.textContent.substring(cursorPos);
                         let dateTime = new Date().toISOString().replace('T', ' ').split('.')[0];  // YYYY-MM-DD HH:MM:SS
 
-                        console.log("Current value before cursor:", textBeforeCursor);
-                        console.log("Current value after cursor:", textAfterCursor);
-                        console.log("Inserting date and time:", dateTime);
-
-                        // Insert the date and time at the cursor position
-                        activeElement.textContent = textBeforeCursor + dateTime + textAfterCursor;
-
-                        // Reset the cursor position after inserting the text if it's a textarea or input
                         if (activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'INPUT') {
+                            // Handle insertion and cursor movement for input and textarea
+                            let cursorPos = activeElement.selectionStart;
+                            let textBeforeCursor = activeElement.value.substring(0, cursorPos);
+                            let textAfterCursor = activeElement.value.substring(cursorPos);
+
+                            activeElement.value = textBeforeCursor + dateTime + textAfterCursor;
                             activeElement.selectionStart = activeElement.selectionEnd = cursorPos + dateTime.length;
+
+                            console.log("Date and time inserted into input/textarea. Cursor moved to end of inserted text.");
+
+                        } else if (activeElement.getAttribute('contenteditable') === 'true') {
+                            // Handle insertion and cursor movement for contenteditable elements
+                            let selection = window.getSelection();
+                            let range = selection.getRangeAt(0);
+
+                            // Insert the date and time at the current cursor position
+                            range.deleteContents();
+                            range.insertNode(document.createTextNode(dateTime));
+
+                            // Move the cursor to the end of the inserted text
+                            range.setStartAfter(range.endContainer);
+                            range.setEndAfter(range.endContainer);
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+
+                            console.log("Date and time inserted into contenteditable element. Cursor moved to end of inserted text.");
                         }
 
-                        console.log("Date and time inserted successfully.");
                     } else {
                         console.error("No valid input or contenteditable element is focused or active.");
                     }
